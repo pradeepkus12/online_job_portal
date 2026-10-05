@@ -1,0 +1,337 @@
+{% load static %}
+{% block body %}
+
+{% include 'recruiter_navigation.html' %}
+<style>
+    /* ==============================
+   Add Job Form CSS
+================================ */
+
+body {
+    background: #f4f7fb;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Marquee */
+.signup-marquee {
+    background: #fd0d4d;
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    padding: 12px;
+    margin-top: 20px;
+}
+
+/* Main Container */
+.signup-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 35px auto;
+    padding: 0 15px;
+}
+
+/* Form */
+.signup {
+    background: white;
+    padding: 30px 35px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Title */
+.signup-title {
+    text-align: center;
+    color: #fd0d4d;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.signup-title i {
+    margin-right: 8px;
+}
+
+/* Labels */
+.signup label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.signup label i {
+    color: #fd0d4d;
+    margin-right: 5px;
+}
+
+/* Inputs */
+.signup .form-control {
+    width: 100%;
+    min-height: 45px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Input Focus */
+.signup .form-control:focus {
+    border-color: #fd0d4d;
+    box-shadow: 0 0 0 0.2rem rgba(253, 13, 77, 0.15);
+    outline: none;
+}
+
+/* Textarea */
+.signup textarea.form-control {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* File Input */
+.signup input[type="file"] {
+    padding: 8px 10px;
+}
+
+/* Button */
+.signup-btn {
+    width: 100%;
+    background: #fd0d4d;
+    color: white;
+    border: none;
+    padding: 13px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.signup-btn:hover {
+    background: #d90840;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(253, 13, 77, 0.3);
+}
+
+.signup-btn i {
+    margin-right: 7px;
+}
+
+/* Form Spacing */
+.signup .mb-3 {
+    margin-bottom: 20px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .signup-container {
+        margin: 25px auto;
+    }
+
+    .signup {
+        padding: 25px 20px;
+    }
+
+    .signup-title {
+        font-size: 25px;
+    }
+
+    .signup-marquee {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .signup {
+        padding: 20px 15px;
+    }
+
+    .signup-title {
+        font-size: 22px;
+    }
+
+    .signup .form-control {
+        font-size: 14px;
+    }
+
+    .signup-btn {
+        font-size: 16px;
+    }
+}
+</style>
+
+<marquee class="signup-marquee">
+    💼 Welcome to Job Posting Portal
+</marquee>
+
+<div class="signup-container">
+
+    <form name="jobform"
+          method="POST"
+          class="signup"
+          enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        <h2 class="signup-title">
+            <i class="fa fa-briefcase"></i> Add New Job
+        </h2>
+
+        <!-- Start Date -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-calendar"></i> Start Date
+            </label>
+            <input type="date"
+                   name="start_date"
+                   class="form-control"
+                   required>
+        </div>
+
+        <!-- End Date -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-calendar"></i> End Date
+            </label>
+            <input type="date"
+                   name="end_date"
+                   class="form-control"
+                   required>
+        </div>
+
+        <!-- Job Title -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-briefcase"></i> Job Title
+            </label>
+            <input type="text"
+                   name="title"
+                   class="form-control"
+                   placeholder="Enter Job Title"
+                   required>
+        </div>
+
+        <!-- Salary -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-inr"></i> Salary
+            </label>
+            <input type="text"
+                   name="salary"
+                   class="form-control"
+                   placeholder="e.g. ₹15,000 - ₹25,000"
+                   required>
+        </div>
+
+        <!-- Job Image -->
+        <div class="mb-3">
+            <label class="form-label">
+                <i class="fa fa-image"></i> Job Image
+            </label>
+
+            <input type="file"
+                   name="image"
+                   class="form-control"
+                   accept="image/*">
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-file-text"></i> Job Description
+            </label>
+
+            <textarea name="description"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Enter Job Description"
+                      required></textarea>
+        </div>
+
+        <!-- Experience -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-user"></i> Experience
+            </label>
+
+            <input type="text"
+                   name="experience"
+                   class="form-control"
+                   placeholder="e.g. Fresher / 1-2 Years"
+                   required>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-map-marker"></i> Location
+            </label>
+
+            <input type="text"
+                   name="location"
+                   class="form-control"
+                   placeholder="e.g. Bhopal, Indore"
+                   required>
+        </div>
+
+        <!-- Skills -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-cogs"></i> Required Skills
+            </label>
+
+            <input type="text"
+                   name="skills"
+                   class="form-control"
+                   placeholder="e.g. Python, Django, MySQL"
+                   required>
+        </div>
+
+        <!-- Creation Date -->
+        <div class="mb-3">
+            <label>
+                <i class="fa fa-calendar-plus-o"></i> Creation Date
+            </label>
+
+            <input type="date"
+                   name="creation_date"
+                   class="form-control"
+                   required>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="signup-btn">
+            <i class="fa fa-plus-circle"></i> submit
+        </button>
+
+    </form>
+
+</div>
+
+
+{% if error == "no" %}
+<script>
+    alert("Job added successfully!");
+</script>
+
+{% elif error == "yes" %}
+<script>
+    alert("Something went wrong. Job was not added.");
+</script>
+
+{% elif error == "recruiter_not_found" %}
+<script>
+    alert("Recruiter profile not found.");
+</script>
+{% endif %}
+
+{% endblock %}

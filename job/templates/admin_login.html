@@ -1,0 +1,149 @@
+{% load static %}
+{% block body %}
+
+{% include 'navigation.html' %}
+<style>
+body{
+    background:#f4f7fc;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.login-marquee{
+    background:#198754;
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+    padding:10px;
+    border-radius:5px;
+    margin:20px;
+}
+
+.login-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:75vh;
+}
+
+.login-form{
+    width:420px;
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+.login-title{
+    text-align:center;
+    color:#198754;
+    margin-bottom:25px;
+    font-weight:bold;
+}
+
+.form-label{
+    font-weight:600;
+}
+
+.form-control{
+    height:45px;
+    border-radius:8px;
+}
+
+.form-control:focus{
+    border-color:#198754;
+    box-shadow:0 0 8px rgba(25,135,84,.3);
+}
+
+.login-btn{
+    width:100%;
+    height:45px;
+    background:#198754;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    background:#146c43;
+}
+.create-btn{
+    display:block;
+    width:100%;
+    height:45px;
+    line-height:45px;
+    text-align:center;
+    text-decoration:none;
+    background:#198754;
+    color:white;
+    border-radius:8px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.create-btn:hover{
+    background:#146c43;
+    color:white;
+} 
+</style>
+ <marquee class="login-marquee">
+    👤 Welcome to Admin Login Portal
+</marquee>
+
+<div class="login-container">
+
+    <form class="login-form" method="POST">
+        {% csrf_token %}
+
+        <h2 class="login-title">
+            <i class="fa fa-user-circle"></i> Admin Login
+        </h2>
+
+        <div class="mb-3">
+            <label class="form-label">
+                <i class="fa fa-user"></i> Username
+            </label>
+
+            <input type="text"
+                   name="uname"
+                   class="form-control"
+                   placeholder="Enter Username"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">
+                <i class="fa fa-lock"></i> Password
+            </label>
+
+            <input type="password"
+                   name="pwd"
+                   class="form-control"
+                   placeholder="Enter Password"
+                   required>
+        </div>
+
+        <button type="submit" class="login-btn">
+            <i class="fa fa-sign-in"></i> Admin Login
+        </button>        
+    </form>
+
+</div>
+
+
+{% if error == "no" %}
+<script>
+    alert("Login Successful");
+    window.location.href = "{% url 'admin_home' %}";
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+    alert("Invalid Username or Password");
+</script>
+{% endif %} 
+    
+
+{% endblock %}

@@ -1,0 +1,481 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'recruiter_navigation.html' %}
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#333;
+}
+
+/* PAGE TITLE */
+.signup-marquee{
+    background:#198754;
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+    padding:10px;
+    border-radius:5px;
+    margin:20px 30px;
+}
+
+/* MAIN */
+.signup-container{
+    width:100%;
+    max-width:1400px;
+    margin:20px auto;
+    padding:20px 50px;
+
+    display:flex;
+    align-items:flex-start;
+    gap:50px;
+}
+
+/* FORM */
+.signup{
+    width:72%;
+}
+
+/* TITLE */
+.signup-title{
+    text-align:center;
+    color:#198754;
+    font-size:32px;
+    font-weight:bold;
+    margin:0 0 30px;
+}
+
+/* ROW */
+.form-row{
+    display:flex;
+    gap:15px;
+    margin-bottom:22px;
+}
+
+/* GROUP */
+.form-group{
+    width:50%;
+}
+
+.form-group-full{
+    width:100%;
+    margin-bottom:22px;
+}
+
+/* LABEL */
+.form-group label,
+.form-group-full label{
+    display:block;
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:8px;
+    color:#333;
+}
+
+/* INPUT */
+.form-control{
+    width:100%;
+    height:50px;
+    padding:10px 15px;
+
+    border:1px solid #d5d5d5;
+    border-radius:5px;
+
+    font-size:17px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#198754;
+    box-shadow:0 0 0 2px rgba(25,135,84,.10);
+}
+
+/* GENDER */
+.gender-box{
+    height:50px;
+    border:1px solid #d5d5d5;
+    border-radius:5px;
+
+    display:flex;
+    align-items:center;
+    gap:25px;
+    padding:0 12px;
+}
+
+.gender-option{
+    display:flex !important;
+    align-items:center;
+    gap:7px;
+    margin:0 !important;
+    font-size:17px !important;
+    font-weight:400 !important;
+}
+
+.gender-option input{
+    width:18px;
+    height:18px;
+    accent-color:#198754;
+}
+
+/* FILE */
+.file-input{
+    width:100%;
+    height:50px;
+    padding:9px;
+
+    border:1px solid #d5d5d5;
+    border-radius:5px;
+
+    font-size:15px;
+}
+
+/* BUTTON */
+.signup-btn{
+    width:270px;
+    height:50px;
+
+    margin-top:5px;
+
+    background:#087ff5;
+    color:white;
+
+    border:none;
+    border-radius:5px;
+
+    font-size:18px;
+    cursor:pointer;
+}
+
+.signup-btn:hover{
+    background:#066fd3;
+}
+
+/* IMAGE */
+.profile-side{
+    width:350px;
+    height:350px;
+
+    flex-shrink:0;
+
+    margin-top:55px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.profile-side img{
+    width:350px;
+    height:350px;
+
+    object-fit:cover;
+
+    border-radius:5px;
+    border:1px solid #ddd;
+
+    display:block;
+}
+
+/* LOGIN */
+.login-link{
+    margin-top:15px;
+    font-size:15px;
+}
+
+.login-link a{
+    color:#087ff5;
+    text-decoration:none;
+}
+
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+
+    .signup-container{
+        flex-direction:column;
+        align-items:center;
+        padding:20px;
+    }
+
+    .signup{
+        width:100%;
+        max-width:700px;
+    }
+
+    .profile-side{
+        margin-top:10px;
+        width:300px;
+        height:300px;
+    }
+
+    .profile-side img{
+        width:300px;
+        height:300px;
+    }
+}
+
+
+@media(max-width:650px){
+
+    .form-row{
+        flex-direction:column;
+    }
+
+    .form-group{
+        width:100%;
+    }
+
+    .signup{
+        width:100%;
+    }
+
+    .signup-title{
+        font-size:25px;
+    }
+
+    .gender-box{
+        gap:12px;
+    }
+
+    .signup-btn{
+        width:100%;
+    }
+
+}
+
+</style>
+
+
+<marquee class="signup-marquee">
+    👤 Recruiter Profile
+</marquee>
+
+
+<div class="signup-container">
+
+
+    <!-- ================= FORM ================= -->
+
+    <form method="POST"
+          class="signup"
+          enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+
+        <h2 class="signup-title">
+            <i class="fa fa-user"></i>
+            Recruiter Profile
+        </h2>
+
+
+        <!-- NAME + EMAIL -->
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       value="{{ recruiter.user.first_name }}"
+                       placeholder="Enter Full Name"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Email Address</label>
+
+                <input type="email"
+                       name="email"
+                       class="form-control"
+                       value="{{ recruiter.user.email }}"
+                       placeholder="Enter Email"
+                       required>
+
+            </div>
+
+        </div>
+
+
+        <!-- MOBILE + COMPANY -->
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Mobile Number</label>
+
+                <input type="text"
+                       name="mobile"
+                       class="form-control"
+                       value="{{ recruiter.mobile }}"
+                       placeholder="Enter Mobile Number"
+                       required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Company</label>
+
+                <input type="text"
+                       name="company"
+                       class="form-control"
+                       value="{{ recruiter.company }}"
+                       placeholder="Enter Company"
+                       required>
+
+            </div>
+
+        </div>
+
+
+        <!-- GENDER + IMAGE -->
+
+        <div class="form-row">
+
+            <!-- GENDER -->
+
+            <div class="form-group">
+
+                <label>
+                    <i class="fa fa-venus-mars"></i>
+                    Gender
+                </label>
+
+                <div class="gender-box">
+
+                    <label class="gender-option">
+
+                        <input type="radio"
+                               name="gender"
+                               value="Male"
+                               {% if recruiter.gender == "Male" %}
+                                   checked
+                               {% endif %}>
+
+                        Male
+
+                    </label>
+
+
+                    <label class="gender-option">
+
+                        <input type="radio"
+                               name="gender"
+                               value="Female"
+                               {% if recruiter.gender == "Female" %}
+                                   checked
+                               {% endif %}>
+
+                        Female
+
+                    </label>
+
+
+                    <label class="gender-option">
+
+                        <input type="radio"
+                               name="gender"
+                               value="Other"
+                               {% if recruiter.gender == "Other" %}
+                                   checked
+                               {% endif %}>
+
+                        Other
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEW IMAGE -->
+
+            <div class="form-group">
+
+                <label>
+                    <i class="fa fa-image"></i>
+                    Change Image
+                </label>
+
+                <input type="file"
+                       name="image"
+                       class="file-input"
+                       accept="image/*">
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <button type="submit"
+                class="signup-btn">
+
+            <i class="fa fa-save"></i>
+            Update Profile
+
+        </button>
+
+    </form>
+
+
+    <!-- ================= IMAGE ================= -->
+
+    <div class="profile-side">
+
+        {% if recruiter.image %}
+
+            <img src="{{ recruiter.image.url }}"
+                 alt="Recruiter Profile">
+
+        {% else %}
+
+            <img src="{% static 'images/default-profile.png' %}"
+                 alt="Profile Image">
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+
+<!-- SUCCESS MESSAGE -->
+
+{% if error == "no" %}
+
+<script>
+    alert("Profile updated successfully!");
+</script>
+
+{% elif error == "yes" %}
+
+<script>
+    alert("Something went wrong. Please try again.");
+</script>
+
+{% endif %}
+
+
+{% endblock %}

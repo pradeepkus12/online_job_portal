@@ -1,0 +1,159 @@
+{% load static %}
+{% block body %}
+
+{% include 'navigation.html' %}
+
+<style>
+body{
+    background:#f4f7fc;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.login-marquee{
+    background:#0d6efd;
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+    padding:10px;
+    border-radius:5px;
+    margin:20px;
+}
+
+.login-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:75vh;
+}
+
+.login-form{
+    width:420px;
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+.login-title{
+    text-align:center;
+    color:#0d6efd;
+    margin-bottom:25px;
+    font-weight:bold;
+}
+
+.form-label{
+    font-weight:600;
+}
+
+.form-control{
+    height:45px;
+    border-radius:8px;
+}
+
+.form-control:focus{
+    border-color:#0d6efd;
+    box-shadow:0 0 8px rgba(13,110,253,.3);
+}
+
+.login-btn{
+    width:100%;
+    height:45px;
+    background:#0d6efd;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    background:#084298;
+} 
+.create-btn{
+    display:block;
+    width:100%;
+    height:45px;
+    line-height:45px;
+    text-align:center;
+    text-decoration:none;
+    background:#198754;
+    color:white;
+    border-radius:8px;
+    font-size:18px;
+    transition:.3s;
+}
+
+.create-btn:hover{
+    background:#146c43;
+    color:white;
+} 
+</style>
+
+<marquee class="login-marquee">
+    👤 Welcome to recruiter Login Portal
+</marquee>
+
+<div class="login-container">
+
+    <form class="login-form" method="POST">
+        {% csrf_token %}
+
+        <h2 class="login-title">
+            <i class="fa fa-user-circle"></i> Recruiter Login
+        </h2>
+
+        <div class="mb-3">
+            <label class="form-label">
+                <i class="fa fa-user"></i> Email Id
+            </label>
+
+            <input type="text"
+                   name="uname"
+                   class="form-control"
+                   placeholder="Enter Email Id"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">
+                <i class="fa fa-lock"></i> Password
+            </label>
+
+            <input type="password"
+                   name="pwd"
+                   class="form-control"
+                   placeholder="Enter Password"
+                   required>
+        </div>
+
+        <button type="submit" class="login-btn">
+            <i class="fa fa-sign-in"></i> Login
+        </button>
+<div class="text-center mt-3">
+    <a href="{% url 'recruiter_signup'%}" class="create-btn">
+        <i class="fa fa-user-plus"></i> Create Account
+    </a>
+</div>        
+
+    </form>
+
+</div>
+{% if error == "no" %}
+<script>
+    alert("Login Successful");
+    window.location.href = "{% url 'recruiter_home' %}";
+</script>
+
+{% elif error == "yes" %}
+<script>
+    alert("Invalid Login Credentials. Please try again.");
+</script>
+
+ {% elif error == "not" %}
+<script>
+    alert("Your login status is pending.");
+</script>
+{% endif %}
+    
+
+{% endblock %}

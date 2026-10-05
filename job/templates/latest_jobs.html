@@ -1,0 +1,590 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'navigation.html' %}
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f7fc;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #212529;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.login-marquee {
+    width: calc(100% - 40px);
+    margin: 25px auto 10px;
+    padding: 14px 20px;
+
+    background: linear-gradient(135deg, #0f172a, #198754);
+    color: #ffffff;
+
+    font-size: 21px;
+    font-weight: 700;
+
+    border-radius: 10px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   HR
+========================================================= */
+
+.page-line {
+    width: calc(100% - 40px);
+    margin: 0 auto 25px;
+
+    border: 0;
+    border-top: 1px solid #d9dee5;
+}
+
+
+/* =========================================================
+   TABLE CONTAINER
+========================================================= */
+
+.table-container {
+    width: 94%;
+    margin: 0 auto 40px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    overflow-x: auto;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.10);
+
+    border: 1px solid #e8edf3;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.job-table {
+    width: 100%;
+
+    min-width: 950px;
+
+    border-collapse: collapse;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.job-table thead {
+    background: linear-gradient(135deg, #0f172a, #198754);
+
+    color: #ffffff;
+}
+
+.job-table th {
+    padding: 16px 14px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    border: none;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.job-table td {
+    padding: 15px 12px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    border-bottom: 1px solid #edf0f3;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   ROW
+========================================================= */
+
+.job-table tbody tr {
+    transition: all 0.25s ease;
+}
+
+.job-table tbody tr:hover {
+    background: #f8fafc;
+
+    transform: scale(1.002);
+}
+
+
+/* =========================================================
+   S.NO.
+========================================================= */
+
+.sno {
+    font-weight: 700;
+
+    color: #6c757d;
+
+    width: 70px;
+}
+
+
+/* =========================================================
+   COMPANY
+========================================================= */
+
+.company-name {
+    font-weight: 700;
+
+    color: #198754;
+
+    min-width: 160px;
+}
+
+
+/* =========================================================
+   JOB TITLE
+========================================================= */
+
+.job-title {
+    font-weight: 700;
+
+    color: #0d6efd;
+
+    min-width: 180px;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.location {
+    color: #495057;
+
+    font-weight: 500;
+
+    min-width: 130px;
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.start-date,
+.end-date {
+    color: #495057;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.start-date i,
+.end-date i {
+    color: #198754;
+
+    margin-right: 5px;
+}
+
+
+/* =========================================================
+   ACTION
+========================================================= */
+
+.action-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.btn-edit {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 8px 14px;
+
+    background: #ffc107;
+
+    color: #212529;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    border: none;
+
+    transition: all 0.25s ease;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+
+    color: #000000;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 8px rgba(224, 168, 0, 0.25);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.btn-delete {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 8px 14px;
+
+    background: #dc3545;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.btn-delete:hover {
+    background: #bb2d3b;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.25);
+}
+
+
+/* =========================================================
+   NO DATA
+========================================================= */
+
+.no-data {
+    padding: 40px !important;
+
+    font-size: 18px !important;
+
+    font-weight: 700;
+
+    color: #6c757d;
+
+    text-align: center !important;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #198754;
+
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #146c43;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .login-marquee {
+        width: calc(100% - 20px);
+
+        margin: 15px auto 10px;
+
+        padding: 12px;
+
+        font-size: 17px;
+    }
+
+    .page-line {
+        width: calc(100% - 20px);
+
+        margin-bottom: 18px;
+    }
+
+    .table-container {
+        width: 96%;
+
+        border-radius: 10px;
+    }
+
+    .job-table {
+        min-width: 900px;
+    }
+
+    .job-table th {
+        padding: 12px 10px;
+
+        font-size: 13px;
+    }
+
+    .job-table td {
+        padding: 12px 10px;
+
+        font-size: 13px;
+    }
+
+    .action-buttons {
+        gap: 6px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        padding: 7px 11px;
+
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREEN
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .login-marquee {
+        font-size: 15px;
+
+        padding: 11px;
+    }
+
+    .table-container {
+        width: 98%;
+    }
+}
+
+</style>
+
+
+<!-- =========================================================
+     PAGE HEADING
+========================================================= -->
+
+<marquee class="login-marquee" behavior="scroll" direction="left">
+
+    <i class="fa fa-briefcase"></i>
+
+    &nbsp; Latest Job List
+
+</marquee>
+
+
+<hr class="page-line">
+
+
+<!-- =========================================================
+     JOB TABLE
+========================================================= -->
+
+<div class="table-container">
+
+    <table class="job-table">
+
+        <!-- ================= TABLE HEADER ================= -->
+
+        <thead>
+
+            <tr>
+
+                <th>S.No.</th>
+
+                <th>Company Name</th>
+
+                <th>Job Title</th>
+
+                <th>Location</th>
+
+                <th>Start Date</th>
+
+                <th>End Date</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <!-- ================= TABLE BODY ================= -->
+
+        <tbody>
+
+            {% for i in data %}
+
+            <tr>
+
+                <!-- S.NO. -->
+
+                <td class="sno">
+
+                    {{ forloop.counter }}
+
+                </td>
+
+
+                <!-- COMPANY -->
+
+                <td class="company-name">
+
+                    {{ i.recruiter.company }}
+
+                </td>
+
+
+                <!-- JOB TITLE -->
+
+                <td class="job-title">
+
+                    {{ i.title }}
+
+                </td>
+
+
+                <!-- LOCATION -->
+
+                <td class="location">
+
+                    <i class="fa fa-map-marker"></i>
+
+                    {{ i.location }}
+
+                </td>
+
+
+                <!-- START DATE -->
+
+                <td class="start-date">
+
+                    <i class="fa fa-calendar"></i>
+
+                    {{ i.start_date }}
+
+                </td>
+
+
+                <!-- END DATE -->
+
+                <td class="end-date">
+
+                    <i class="fa fa-calendar"></i>
+
+                    {{ i.end_date }}
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <!-- EDIT -->
+
+                        <a href="{% url 'user_login'%}"
+                           class="btn-edit">
+
+                            <i class="fa fa-edit"></i>
+
+                            Login to Apply
+                        </a>
+
+                    </div>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+                        
+</div>
+
+{% endblock %}

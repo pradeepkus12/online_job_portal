@@ -1,0 +1,377 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'navigation.html' %}
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    background: #f5f7fa;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: #333;
+}
+
+
+/* PAGE */
+
+.resume-page {
+    width: 100%;
+
+    padding: 50px 20px;
+}
+
+
+/* CARD */
+
+.resume-card {
+    max-width: 650px;
+
+    margin: auto;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 35px;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}
+
+
+/* TITLE */
+
+.resume-title {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.resume-title h2 {
+    color: #198754;
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.resume-title p {
+    color: #777;
+
+    margin: 0;
+}
+
+
+/* JOB INFORMATION */
+
+.job-info {
+    background: #f8f9fa;
+
+    border-left: 5px solid #198754;
+
+    padding: 18px;
+
+    margin-bottom: 25px;
+
+    border-radius: 6px;
+}
+
+.job-info h4 {
+    margin: 0 0 10px;
+
+    color: #198754;
+
+    font-size: 22px;
+}
+
+.job-info p {
+    margin: 5px 0;
+}
+
+
+/* UPLOAD */
+
+.upload-box {
+    border: 2px dashed #198754;
+
+    background: #f8fff9;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.upload-box h4 {
+    color: #198754;
+
+    margin-bottom: 18px;
+
+    font-weight: bold;
+}
+
+.upload-box label {
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+.upload-box input[type="file"] {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    background: white;
+}
+
+
+/* NOTE */
+
+.upload-note {
+    margin-top: 12px;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+
+/* BUTTONS */
+
+.button-area {
+    text-align: center;
+
+    margin-top: 25px;
+}
+
+.btn-submit {
+    border: none;
+
+    background: #198754;
+
+    color: white;
+
+    padding: 14px 35px;
+
+    border-radius: 7px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: #146c43;
+}
+
+.btn-back {
+    display: inline-block;
+
+    margin-left: 10px;
+
+    padding: 14px 30px;
+
+    background: #6c757d;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+
+    font-size: 17px;
+}
+
+.btn-back:hover {
+    background: #5c636a;
+
+    color: white;
+}
+
+
+/* MOBILE */
+
+@media(max-width: 600px) {
+
+    .resume-page {
+        padding: 25px 15px;
+    }
+
+    .resume-card {
+        padding: 22px;
+    }
+
+    .btn-submit,
+    .btn-back {
+        display: block;
+
+        width: 100%;
+
+        margin: 8px 0;
+    }
+
+}
+
+</style>
+
+
+<div class="resume-page">
+
+
+    <div class="resume-card">
+
+
+        <!-- TITLE -->
+
+        <div class="resume-title">
+
+            <h2>
+                Upload Resume
+            </h2>
+
+            <p>
+                Upload your resume to complete your application
+            </p>
+
+        </div>
+
+
+        <!-- JOB INFORMATION -->
+
+        <div class="job-info">
+
+            <h4>
+                {{ job.title }}
+            </h4>
+
+            <p>
+
+                <strong>
+                    Company:
+                </strong>
+
+                {{ job.recruiter.company }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Location:
+                </strong>
+
+                {{ job.location }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Salary:
+                </strong>
+
+                {{ job.salary }}
+
+            </p>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="upload-box">
+
+                <h4>
+                    📄 Select Your Resume
+                </h4>
+
+
+                <label for="resume">
+                    Upload Resume
+                </label>
+
+
+                <input
+                    type="file"
+                    name="resume"
+                    id="resume"
+                    accept=".pdf,.doc,.docx"
+                    required
+                >
+
+
+                <div class="upload-note">
+
+                    Allowed files:
+                    PDF, DOC, DOCX
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-area">
+
+
+                <button
+                    type="submit"
+                    class="btn-submit"
+                >
+
+                    ✓ Submit Application
+
+                </button>
+
+
+                <a
+                    href="{% url 'applyforjob' job.id %}"
+                    class="btn-back"
+                >
+
+                    ← Back
+
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

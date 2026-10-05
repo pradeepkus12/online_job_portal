@@ -1,0 +1,567 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'recruiter_navigation.html' %}
+
+<style>
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #f4f7fc;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.edit-job-heading {
+    margin: 20px 15px;
+    padding: 13px;
+
+    background: linear-gradient(135deg, #0f172a, #198754);
+    color: white;
+
+    text-align: center;
+
+    font-size: 21px;
+    font-weight: bold;
+
+    border-radius: 8px;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   FORM CONTAINER
+========================================================= */
+
+.edit-job-container {
+    width: 70%;
+    margin: 30px auto;
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   FORM TITLE
+========================================================= */
+
+.form-title {
+    text-align: center;
+
+    color: #0f172a;
+
+    margin-bottom: 25px;
+
+    font-size: 24px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+
+    color: #333;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   INPUT / TEXTAREA
+========================================================= */
+
+.form-control {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #ced4da;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    box-sizing: border-box;
+
+    outline: none;
+
+    transition: 0.3s;
+}
+
+
+.form-control:focus {
+    border-color: #198754;
+
+    box-shadow: 0 0 5px rgba(25, 135, 84, 0.25);
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+textarea.form-control {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   CURRENT IMAGE
+========================================================= */
+
+.current-image {
+    margin-top: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.current-image img {
+    width: 120px;
+
+    height: 90px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+
+    border: 2px solid #198754;
+}
+
+
+/* =========================================================
+   BUTTON AREA
+========================================================= */
+
+.button-area {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+
+/* =========================================================
+   UPDATE BUTTON
+========================================================= */
+
+.btn-update {
+    padding: 11px 25px;
+
+    background: #198754;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.btn-update:hover {
+    background: #146c43;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+========================================================= */
+
+.btn-cancel {
+    padding: 11px 25px;
+
+    background: #6c757d;
+
+    color: white;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+
+.btn-cancel:hover {
+    background: #545b62;
+
+    color: white;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .edit-job-container {
+        width: 90%;
+
+        padding: 20px;
+    }
+
+
+    .edit-job-heading {
+        margin: 15px 10px;
+
+        font-size: 18px;
+    }
+
+
+    .button-area {
+        flex-direction: column;
+    }
+
+
+    .btn-update,
+    .btn-cancel {
+        width: 100%;
+
+        text-align: center;
+
+        box-sizing: border-box;
+    }
+
+}
+
+</style>
+
+<!-- =========================================================
+     PAGE HEADING
+========================================================= -->
+
+<marquee class="edit-job-heading">
+
+<i class="fa fa-edit"></i>
+
+Edit Job Details
+
+
+</marquee>
+
+<!-- =========================================================
+     FORM CONTAINER
+========================================================= -->
+
+<div class="edit-job-container">
+
+
+<h2 class="form-title">
+
+    <i class="fa fa-briefcase"></i>
+
+    Update Job
+
+</h2>
+
+
+
+<!-- =====================================================
+     EDIT FORM
+====================================================== -->
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+
+    {% csrf_token %}
+
+
+
+    <!-- =================================================
+         JOB TITLE
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Job Title
+        </label>
+
+        <input type="text"
+               name="title"
+               class="form-control"
+               value="{{ job.title }}"
+               required>
+
+    </div>
+
+
+
+    <!-- =================================================
+         SALARY
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Salary
+        </label>
+
+        <input type="text"
+               name="salary"
+               class="form-control"
+               value="{{ job.salary }}"
+               required>
+
+    </div>
+
+
+
+    <!-- =================================================
+         DESCRIPTION
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Job Description
+        </label>
+
+        <textarea name="description"
+                  class="form-control"
+                  required>{{ job.description }}</textarea>
+
+    </div>
+
+
+
+    <!-- =================================================
+         EXPERIENCE
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Experience
+        </label>
+
+        <input type="text"
+               name="experience"
+               class="form-control"
+               value="{{ job.experience }}"
+               required>
+
+    </div>
+
+
+
+    <!-- =================================================
+         LOCATION
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Location
+        </label>
+
+        <input type="text"
+               name="location"
+               class="form-control"
+               value="{{ job.location }}"
+               required>
+
+    </div>
+
+
+
+    <!-- =================================================
+         SKILLS
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Skills
+        </label>
+
+        <input type="text"
+               name="skills"
+               class="form-control"
+               value="{{ job.skills }}"
+               required>
+
+    </div>
+
+
+
+    <!-- =================================================
+         START DATE
+    ================================================== -->
+
+    <div class="form-group">
+    <label>Start Date</label>
+
+    <input type="date"
+           name="start_date"
+           class="form-control"
+           value="{{ job.start_date|date:'Y-m-d' }}"
+           required>
+</div>
+
+
+
+    <!-- =================================================
+         END DATE
+    ================================================== -->
+
+    <div class="form-group">
+    <label>End Date</label>
+
+    <input type="date"
+           name="end_date"
+           class="form-control"
+           value="{{ job.end_date|date:'Y-m-d' }}"
+           required>
+</div>
+
+<label>Creation Date</label>
+
+<input type="date"
+       name="creation_date"
+       class="form-control"
+       value="{{ job.creation_date|date:'Y-m-d' }}">
+
+
+    <!-- =================================================
+         JOB IMAGE
+    ================================================== -->
+
+    <div class="form-group">
+
+        <label>
+            Job Image
+        </label>
+
+
+        {% if job.image %}
+
+        <div class="current-image">
+
+            <p>
+                Current Image:
+            </p>
+
+            <img src="{{ job.image.url }}"
+                 alt="Current Job Image">
+
+        </div>
+
+        {% endif %}
+
+
+        <input type="file"
+               name="image"
+               class="form-control">
+
+    </div>
+
+
+
+    <!-- =================================================
+         BUTTONS
+    ================================================== -->
+
+    <div class="button-area">
+
+
+        <button type="submit"
+                class="btn-update">
+
+            <i class="fa fa-save"></i>
+
+            Update Job
+
+        </button>
+
+
+        <a href="{% url 'job_list' %}"
+           class="btn-cancel">
+
+            <i class="fa fa-arrow-left"></i>
+
+            Cancel
+
+        </a>
+
+
+    </div>
+
+
+</form>
+
+
+</div>
+
+<script>
+
+const urlParams = new URLSearchParams(window.location.search);
+
+if (urlParams.get('updated') === '1') {
+
+    alert("Job details updated successfully!");
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+}
+
+</script>
+
+{% endblock %}

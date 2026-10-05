@@ -1,0 +1,276 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'admin_navigation.html' %}
+
+
+<style>
+
+    /* ================= Marquee ================= */
+
+    .login-marquee {
+        background: linear-gradient(135deg, #0f172a, #2563eb);
+        color: white;
+        padding: 12px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 8px;
+        margin: 20px 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        letter-spacing: 1px;
+    }
+
+
+    /* ================= Table Container ================= */
+
+    .table-container {
+        width: 95%;
+        margin: 25px auto;
+        overflow-x: auto;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+        background: white;
+    }
+
+
+    /* ================= User Table ================= */
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+        background: white;
+    }
+
+
+    /* ================= Table Header ================= */
+
+    .user-table thead {
+        background: linear-gradient(135deg, #0f172a, #2563eb);
+        color: white;
+    }
+
+    .user-table th {
+        padding: 15px;
+        text-align: center;
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+
+    /* ================= Table Data ================= */
+
+    .user-table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        vertical-align: middle;
+    }
+
+
+    /* ================= Table Hover ================= */
+
+    .user-table tbody tr {
+        transition: 0.3s;
+    }
+
+    .user-table tbody tr:hover {
+        background: #f1f5f9;
+    }
+
+
+    /* ================= User Image ================= */
+
+    .user-image {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #2563eb;
+    }
+
+
+    /* ================= Delete Button ================= */
+
+    .btn-delete {
+        display: inline-block;
+        background: #dc3545;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-delete:hover {
+        background: #b02a37;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+
+    /* ================= No Data ================= */
+
+    .no-data {
+        padding: 20px !important;
+        font-size: 18px;
+        font-weight: bold;
+        color: #6c757d;
+    }
+
+
+    /* ================= Responsive ================= */
+
+    @media (max-width: 768px) {
+
+        .login-marquee {
+            font-size: 16px;
+            margin: 15px 10px;
+        }
+
+        .table-container {
+            width: 98%;
+        }
+
+    }
+
+</style>
+
+
+<!-- ================= Page Heading ================= -->
+
+<marquee class="login-marquee">
+    👤 View Recruiter - pending
+</marquee>
+
+<hr>
+
+
+<!-- ================= User Table ================= -->
+
+<div class="table-container">
+
+    <table class="user-table" id="userTable">
+
+        <thead>
+
+            <tr>
+
+                <th>S.No.</th>
+                <th>Full Name</th>
+                <th>Email ID</th>
+                <th>Contact</th>
+                <th>Gender</th>
+                <th>Company</th>
+                <th>Image</th>
+                <th>status</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for i in data %}
+
+            <tr>
+
+                <!-- Serial Number -->
+                <td>
+                    {{ forloop.counter }}
+                </td>
+
+
+                <!-- Full Name -->
+                <td>
+                    {{ i.user.get_full_name }}
+                </td>
+
+
+                <!-- Email ID -->
+                <td>
+                    {{ i.user.email }}
+                </td>
+
+
+                <!-- Contact -->
+                <td>
+                    {{ i.mobile }}
+                </td>
+
+
+                <!-- Gender -->
+                <td>
+                    {{ i.gender }}
+                </td>
+
+                <!-- Company -->
+                <td>
+                    {{ i.company }}
+                </td>
+                <!-- User Image -->
+                <td>
+
+                    {% if i.image %}
+
+                        <img src="{{ i.image.url }}"
+                             alt="User Image"
+                             class="user-image">
+
+                    {% else %}
+
+                        No Image
+
+                    {% endif %}
+
+                </td>
+                <!-- Status -->
+                 <td>
+                    {{ i.status }}
+                </td>
+
+                <!-- Action -->
+                <td>
+
+                    <a href="{% url 'change_status' i.id %}"
+                       class="btn-delete"
+                       onclick="return confirm('Are you sure you want to change the status of this recruiter?')">
+
+                        <i class="fa fa-edit"></i>
+                        Change Status
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7"
+                    class="no-data">
+
+                    No Student Users Found
+
+                </td>
+
+            </tr>
+
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+{% endblock %}
