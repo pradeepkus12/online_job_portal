@@ -88,6 +88,22 @@ body{
     background:#146c43;
     color:white;
 }
+.forgot-password {
+    text-align: right;
+    margin: 10px 0 20px;
+}
+
+.forgot-password a {
+    color: #146cff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+    color: #0d5ddd;
+}
 </style>
 
 <marquee class="login-marquee">
@@ -127,9 +143,20 @@ body{
                    required>
         </div>
 
-        <button type="submit" class="login-btn">
-            <i class="fa fa-sign-in"></i> Login
-        </button>
+       
+
+
+       <div class="forgot-password">
+      <a href="{% url 'forgot_password' %}">
+        Forgot Password?
+       </a>
+       </div>
+
+
+<button type="submit" class="login-btn">
+    <i class="fa fa-sign-in"></i>
+    Login
+</button>
 <div class="text-center mt-3">
     <a href="{% url 'user_signup' %}" class="create-btn">
         <i class="fa fa-user-plus"></i> Create Account

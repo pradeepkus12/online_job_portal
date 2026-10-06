@@ -1,0 +1,285 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'recruiter_navigation.html' %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f7fa;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #333;
+    }
+
+    .page-container {
+        padding: 35px 45px;
+    }
+
+    .page-title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+        color: #198754;
+        margin-bottom: 30px;
+    }
+
+    .table-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.10),
+            0 2px 8px rgba(0, 0, 0, 0.05);
+
+        overflow-x: auto;
+    }
+
+    .candidate-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+    .candidate-table thead {
+        background: #198754;
+        color: white;
+    }
+
+    .candidate-table th {
+        padding: 15px 12px;
+        text-align: center;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .candidate-table td {
+        padding: 14px 12px;
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .candidate-table tbody tr {
+        transition: 0.2s;
+    }
+
+    .candidate-table tbody tr:hover {
+        background: #f0f9f5;
+    }
+
+    .candidate-name {
+        font-weight: 700;
+        color: #198754;
+    }
+
+    .job-title {
+        font-weight: 600;
+        color: #444;
+    }
+
+    .resume-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        padding: 8px 13px;
+        border-radius: 7px;
+
+        background: #198754;
+        color: white;
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        transition: 0.2s;
+    }
+
+    .resume-btn:hover {
+        background: #146c43;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 45px !important;
+        color: #777;
+        font-size: 16px;
+    }
+
+    .date-badge {
+        display: inline-block;
+        padding: 7px 10px;
+        border-radius: 7px;
+        background: #e8f5ee;
+        color: #198754;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+
+        .page-container {
+            padding: 25px 15px;
+        }
+
+        .page-title {
+            font-size: 25px;
+        }
+
+        .table-card {
+            padding: 15px;
+        }
+    }
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 8px 13px;
+    border-radius: 7px;
+
+    background: #dc3545;
+    color: white;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    background: #b02a37;
+    color: white;
+    transform: translateY(-1px);
+}    
+</style>
+
+
+<div class="page-container">
+
+    <div class="page-title">
+        Applied Candidates
+    </div>
+
+    <div class="table-card">
+
+        <table class="candidate-table">
+
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Candidate Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Job Title</th>
+                    <th>Applied Date</th>
+                    <th>Resume</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in data %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td class="candidate-name">
+                        {{ i.student.user.first_name }}
+                        {{ i.student.user.last_name }}
+                    </td>
+
+                    <td>
+                        {{ i.student.user.email }}
+                    </td>
+
+                    <td>
+                        {{ i.student.mobile }}
+                    </td>
+
+                    <td class="job-title">
+                        {{ i.job.title }}
+                    </td>
+
+                    <td>
+                        <span class="date-badge">
+                            {{ i.applydate }}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        {% if i.resume %}
+
+                        <a href="{{ i.resume.url }}"
+                           target="_blank"
+                           class="resume-btn">
+
+                            <i class="fa fa-file-pdf"></i>
+                            View Resume
+
+                        </a>
+
+                        {% else %}
+
+                        <span style="color:#999;">
+                            No Resume
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+    <a href="{% url 'delete_applied_candidate' i.id %}"
+       class="delete-btn"
+       onclick="return confirm('Are you sure you want to delete this applied candidate?');">
+
+        <i class="fa fa-trash"></i>
+        Delete
+
+    </a>
+</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="8" class="no-data">
+                        <i class="fa fa-users"
+                           style="font-size:35px; margin-bottom:10px;">
+                        </i>
+
+                        <br>
+
+                        No candidates have applied yet.
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

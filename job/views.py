@@ -10,7 +10,8 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def index(request):
@@ -980,3 +981,310 @@ def upload_resume(request, id):
             'job': job
         }
     )
+def admin_home(request):
+
+    total_users = StudentUser.objects.count()
+    total_recruiters = Recruiter.objects.count()
+    total_jobs = Job.objects.count()
+    total_applications = Apply.objects.count()
+
+    return render(request, 'admin_home.html', {
+        'total_users': total_users,
+        'total_recruiters': total_recruiters,
+        'total_jobs': total_jobs,
+        'total_applications': total_applications,
+    })   
+def applied_candidatelist(request):
+
+    if not request.user.is_authenticated:
+        return redirect('recruiter_login')
+
+    try:
+        recruiter = Recruiter.objects.get(user=request.user)
+    except Recruiter.DoesNotExist:
+        return redirect('recruiter_login')
+
+    data = Apply.objects.filter(
+        job__recruiter=recruiter
+    ).select_related(
+        'student__user',
+        'job'
+    ).order_by('-id')
+
+    return render(
+        request,
+        'applied_candidatelist.html',
+        {
+            'data': data
+        }
+    )  
+def forgot_password(request):
+
+    if request.method == "POST":
+
+        identifier = request.POST.get("identifier", "").strip()
+
+        if not identifier:
+            messages.error(
+                request,
+                "Please enter your email or mobile number."
+            )
+            return redirect("forgot_password")
+
+        student = None
+
+        # Search by email
+        if "@" in identifier:
+
+            student = StudentUser.objects.select_related("user").filter(
+                user__email__iexact=identifier
+            ).first()
+
+        # Search by mobile
+        else:
+
+            student = StudentUser.objects.select_related("user").filter(
+                mobile=identifier
+            ).first()
+
+        if not student:
+
+            messages.error(
+                request,
+                "No user account found with this email or mobile number."
+            )
+
+            return redirect("forgot_password")
+
+        user = student.user
+
+        if not user.email:
+
+            messages.error(
+                request,
+                "No email address is registered with this account."
+            )
+
+            return redirect("forgot_password")
+
+        # Generate 6 digit OTP
+        otp = str(random.randint(100000, 999999))
+
+        # Save OTP in session
+        request.session["reset_user_id"] = user.id
+        request.session["reset_otp"] = otp
+        request.session["otp_verified"] = False
+
+        # OTP expiry = 5 minutes
+        request.session["reset_otp_expiry"] = (
+            __import__("time").time() + 300
+        )
+
+        # Send OTP to email
+        send_mail(
+            subject="Online Job Portal - Password Reset OTP",
+
+            message=f"""
+Hello {user.first_name or user.username},
+
+Your OTP for resetting your Online Job Portal password is:
+
+{otp}
+
+This OTP is valid for 5 minutes.
+
+If you did not request a password reset, please ignore this email.
+
+Regards,
+Online Job Portal
+""",
+
+            from_email=settings.DEFAULT_FROM_EMAIL,
+
+            recipient_list=[user.email],
+
+            fail_silently=False,
+        )
+
+        messages.success(
+            request,
+            "OTP has been sent to your registered email."
+        )
+
+        return redirect("verify_reset_otp")
+
+    return render(request, "forgot_password.html")
+
+def verify_reset_otp(request):
+
+    if "reset_user_id" not in request.session:
+        messages.error(
+            request,
+            "Please request a new OTP."
+        )
+        return redirect("forgot_password")
+
+    if request.method == "POST":
+
+        entered_otp = request.POST.get("otp", "").strip()
+
+        saved_otp = request.session.get("reset_otp")
+
+        expiry = request.session.get("reset_otp_expiry")
+
+        # Check OTP expiry
+        if not expiry or __import__("time").time() > expiry:
+
+            request.session.pop("reset_otp", None)
+            request.session.pop("reset_otp_expiry", None)
+
+            messages.error(
+                request,
+                "OTP has expired. Please request a new OTP."
+            )
+
+            return redirect("forgot_password")
+
+        # Check OTP
+        if entered_otp == saved_otp:
+
+            request.session["otp_verified"] = True
+
+            messages.success(
+                request,
+                "OTP verified successfully."
+            )
+
+            return redirect("reset_password")
+
+        messages.error(
+            request,
+            "Invalid OTP. Please enter the correct OTP."
+        )
+
+    return render(request, "verify_reset_otp.html")
+
+def reset_password(request):
+
+    if not request.session.get("otp_verified"):
+
+        messages.error(
+            request,
+            "Please verify OTP first."
+        )
+
+        return redirect("forgot_password")
+
+    user_id = request.session.get("reset_user_id")
+
+    if not user_id:
+
+        messages.error(
+            request,
+            "Password reset session expired."
+        )
+
+        return redirect("forgot_password")
+
+    try:
+
+        user = User.objects.get(id=user_id)
+
+    except User.DoesNotExist:
+
+        messages.error(
+            request,
+            "User account not found."
+        )
+
+        return redirect("forgot_password")
+
+    if request.method == "POST":
+
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if not password or not confirm_password:
+
+            messages.error(
+                request,
+                "Please enter both passwords."
+            )
+
+            return render(
+                request,
+                "reset_password.html"
+            )
+
+        if password != confirm_password:
+
+            messages.error(
+                request,
+                "New password and confirm password do not match."
+            )
+
+            return render(
+                request,
+                "reset_password.html"
+            )
+
+        if len(password) < 6:
+
+            messages.error(
+                request,
+                "Password must contain at least 6 characters."
+            )
+
+            return render(
+                request,
+                "reset_password.html"
+            )
+
+        # Change password securely
+        user.set_password(password)
+        user.save()
+
+        # Clear password reset session
+        request.session.pop("reset_user_id", None)
+        request.session.pop("reset_otp", None)
+        request.session.pop("otp_verified", None)
+        request.session.pop("reset_otp_expiry", None)
+
+        messages.success(
+            request,
+            "Password reset successfully. Please login with your new password."
+        )
+
+        return redirect("user_login")
+
+    return render(
+        request,
+        "reset_password.html"
+    )
+    
+def delete_applied_candidate(request, id):
+    if not request.user.is_authenticated:
+        return redirect('recruiter_login')
+
+    try:
+        recruiter = Recruiter.objects.get(user=request.user)
+
+        application = Apply.objects.get(
+            id=id,
+            job__recruiter=recruiter
+        )
+
+        application.delete()
+
+        messages.success(
+            request,
+            "Applied candidate deleted successfully."
+        )
+
+    except Apply.DoesNotExist:
+        messages.error(
+            request,
+            "Applied candidate not found."
+        )
+
+    return redirect('applied_candidatelist')
