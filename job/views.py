@@ -12,6 +12,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
+from openai import OpenAI
 
 
 def index(request):
@@ -1288,3 +1289,106 @@ def delete_applied_candidate(request, id):
         )
 
     return redirect('applied_candidatelist')
+def contact(request):
+    return render(request, 'contact.html')
+
+def ai_assistant(request):
+
+    answer = ""
+
+    if request.method == "POST":
+
+        question = request.POST.get("question", "").strip()
+
+        if question:
+
+            try:
+                # Get latest jobs from database
+                jobs = Job.objects.select_related(
+                    'recruiter'
+                ).order_by('-id')[:30]
+
+                job_data = ""
+
+                for job in jobs:
+
+                    company = job.recruiter.company if job.recruiter else "N/A"
+
+                    job_data += f"""
+                    Job ID: {job.id}
+                    Job Title: {job.title}
+                    Company: {company}
+                    Salary: {job.salary}
+                    Location: {job.location}
+                    Experience: {job.experience}
+                    Skills: {job.skills}
+                    Description: {job.description}
+                    Start Date: {job.start_date}
+                    End Date: {job.end_date}
+                    -------------------------
+                    """
+
+                client = OpenAI(
+                    api_key=settings.OPENAI_API_KEY
+                )
+
+                response = client.responses.create(
+
+                    # Use a model available in your API account
+                    model="YOUR_AVAILABLE_MODEL",
+
+                    instructions="""
+                    You are an AI Job Assistant for an Online Job Portal.
+
+                    You have access to the current jobs listed in the portal.
+
+                    Help users with:
+                    - Finding suitable jobs
+                    - Job recommendations
+                    - Job skills
+                    - Salary information
+                    - Location
+                    - Experience requirements
+                    - Job descriptions
+                    - Interview preparation
+                    - Career guidance
+
+                    IMPORTANT:
+                    1. Recommend jobs only from the supplied database data.
+                    2. Do not invent jobs.
+                    3. If no matching job exists, clearly say that no matching
+                       job was found.
+                    4. Keep answers simple and easy to understand.
+                    5. When recommending a job, mention job title, company,
+                       location, salary and required skills.
+                    """,
+
+                    input=f"""
+                    AVAILABLE JOBS FROM OUR DATABASE:
+
+                    {job_data}
+
+                    USER QUESTION:
+
+                    {question}
+                    """
+                )
+
+                answer = response.output_text
+
+            except Exception as e:
+
+                print("AI ERROR:", e)
+
+                answer = (
+                    "Sorry, AI service is currently unavailable. "
+                    "Please try again later."
+                )
+
+    return render(
+        request,
+        "ai_assistant.html",
+        {
+            "answer": answer
+        }
+    )

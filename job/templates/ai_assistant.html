@@ -1,0 +1,208 @@
+{% load static %}
+
+{% block body %}
+
+{% include 'user_navigation.html' %}
+
+<style>
+
+body {
+    background: #f5f7fa;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.ai-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.ai-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.10);
+    overflow: hidden;
+}
+
+.ai-header {
+    background: #198754;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+.ai-header h2 {
+    margin: 0;
+    font-weight: bold;
+}
+
+.ai-header p {
+    margin: 8px 0 0;
+}
+
+.ai-body {
+    padding: 30px;
+}
+
+.answer-box {
+    background: #f1f8f4;
+    border-left: 5px solid #198754;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    color: #333;
+    white-space: pre-line;
+}
+
+.question-box {
+    display: flex;
+    gap: 10px;
+}
+
+.question-input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+.question-input:focus {
+    border-color: #198754;
+}
+
+.ask-btn {
+    background: #198754;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.ask-btn:hover {
+    background: #146c43;
+}
+
+.suggestions {
+    margin-top: 25px;
+}
+
+.suggestions button {
+    margin: 5px;
+    padding: 8px 15px;
+    border: 1px solid #198754;
+    color: #198754;
+    background: white;
+    border-radius: 20px;
+}
+
+.suggestions button:hover {
+    background: #198754;
+    color: white;
+}
+
+</style>
+
+
+<div class="ai-container">
+
+    <div class="ai-card">
+
+        <div class="ai-header">
+
+            <h2>🤖 AI Job Assistant</h2>
+
+            <p>
+                Ask anything about jobs, skills, resume and interviews
+            </p>
+
+        </div>
+
+
+        <div class="ai-body">
+
+            {% if answer %}
+
+            <div class="answer-box">
+
+                <strong>🤖 AI Assistant:</strong>
+
+                <br><br>
+
+                {{ answer }}
+
+            </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="question-box">
+
+                    <input
+                        type="text"
+                        name="question"
+                        class="question-input"
+                        placeholder="Ask your question..."
+                        required
+                    >
+
+                    <button
+                        type="submit"
+                        class="ask-btn">
+                        Ask AI
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <div class="suggestions">
+
+                <strong>Try asking:</strong>
+
+                <br>
+
+                <button type="button"
+                        onclick="setQuestion('What skills are required for a Python Developer?')">
+                    Python Developer Skills
+                </button>
+
+                <button type="button"
+                        onclick="setQuestion('Give me 10 Django interview questions')">
+                    Django Interview
+                </button>
+
+                <button type="button"
+                        onclick="setQuestion('How can I improve my resume?')">
+                    Resume Tips
+                </button>
+
+                <button type="button"
+                        onclick="setQuestion('What skills should I learn for IT Support?')">
+                    IT Support Skills
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function setQuestion(question) {
+    document.querySelector(".question-input").value = question;
+}
+
+</script>
+
+{% endblock %}

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -132,3 +134,9 @@ EMAIL_HOST_USER = 'abc@gmail.com'
 EMAIL_HOST_PASSWORD = 'xxxx xxxx xxxx xxxx'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# add API key for OpenAI
+
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

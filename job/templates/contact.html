@@ -1,0 +1,331 @@
+
+{% load static %}
+
+{% block body %}
+
+{% include 'navigation.html' %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f7fa;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .contact-container {
+        padding: 40px 50px;
+    }
+
+    .contact-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 35px;
+    }
+
+    .contact-wrapper {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        gap: 25px;
+    }
+
+    .contact-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .contact-card h2 {
+        color: #198754;
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .contact-icon {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+        border-radius: 50%;
+        background: #198754;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        margin-right: 15px;
+    }
+
+    .contact-info h4 {
+        margin: 0 0 5px;
+        font-size: 17px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .contact-info p {
+        margin: 0;
+        color: #666;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+        color: #444;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #198754;
+        box-shadow: 0 0 5px rgba(25,135,84,0.2);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 130px;
+    }
+
+    .send-btn {
+        background: #198754;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .send-btn:hover {
+        background: #146c43;
+        transform: translateY(-2px);
+    }
+
+    .contact-bottom {
+        margin-top: 25px;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .contact-bottom h3 {
+        color: #198754;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    .contact-bottom p {
+        margin: 0;
+        color: #666;
+        font-size: 15px;
+    }
+
+    @media (max-width: 900px) {
+        .contact-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .contact-container {
+            padding: 25px 15px;
+        }
+
+        .contact-title {
+            font-size: 27px;
+        }
+    }
+</style>
+
+
+<div class="contact-container">
+
+    <!-- PAGE TITLE -->
+    <div class="contact-title">
+        Contact Us
+    </div>
+
+
+    <div class="contact-wrapper">
+
+        <!-- CONTACT INFORMATION -->
+        <div class="contact-card">
+
+            <h2>Get In Touch</h2>
+
+            <div class="contact-info">
+
+                <div class="contact-icon">
+                    <i class="fa fa-map-marker"></i>
+                </div>
+
+                <div>
+                    <h4>Address</h4>
+                    <p>Bhopal, Madhya Pradesh, India</p>
+                </div>
+
+            </div>
+
+
+            <div class="contact-info">
+
+                <div class="contact-icon">
+                    <i class="fa fa-phone"></i>
+                </div>
+
+                <div>
+                    <h4>Phone</h4>
+                    <p>+91 98765 43210</p>
+                </div>
+
+            </div>
+
+
+            <div class="contact-info">
+
+                <div class="contact-icon">
+                    <i class="fa fa-envelope"></i>
+                </div>
+
+                <div>
+                    <h4>Email</h4>
+                    <p>support@onlinejobportal.com</p>
+                </div>
+
+            </div>
+
+
+            <div class="contact-info">
+
+                <div class="contact-icon">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+
+                <div>
+                    <h4>Working Hours</h4>
+                    <p>Monday - Saturday</p>
+                    <p>10:00 AM - 6:00 PM</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTACT FORM -->
+        <div class="contact-card">
+
+            <h2>Send Us a Message</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label>Full Name</label>
+
+                    <input type="text"
+                           name="name"
+                           class="form-control"
+                           placeholder="Enter your full name"
+                           required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Email Address</label>
+
+                    <input type="email"
+                           name="email"
+                           class="form-control"
+                           placeholder="Enter your email"
+                           required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Subject</label>
+
+                    <input type="text"
+                           name="subject"
+                           class="form-control"
+                           placeholder="Enter subject"
+                           required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Message</label>
+
+                    <textarea name="message"
+                              class="form-control"
+                              placeholder="Write your message here..."
+                              required></textarea>
+
+                </div>
+
+
+                <button type="submit" class="send-btn">
+                    <i class="fa fa-paper-plane"></i>
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOTTOM MESSAGE -->
+    <div class="contact-bottom">
+
+        <h3>Online Job Portal System</h3>
+
+        <p>
+            If you have any questions, suggestions or need assistance,
+            please feel free to contact us.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}
